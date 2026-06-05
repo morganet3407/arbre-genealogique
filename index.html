@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon Arbre Généalogique</title>
+    <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+        #arbre-svg { width: 100%; height: 100vh; display: block; }
+    </style>
+</head>
+<body>
+
+    <object id="arbre-svg" data="arbre.svg" type="image/svg+xml"></object>
+
+    <script>
+        window.onload = function() {
+            // Initialisation du zoom
+            svgPanZoom('#arbre-svg', {
+                zoomEnabled: true,
+                controlIconsEnabled: true,
+                fit: true,
+                center: true
+            });
+        };
+    </script>
+</body>
+</html>
