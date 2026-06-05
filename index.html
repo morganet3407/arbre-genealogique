@@ -2,34 +2,60 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Arbre Généalogique</title>
     <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #f4ecd8; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #f4ecd8; font-family: sans-serif; }
         #arbre-svg { width: 100%; height: 100vh; display: block; }
         
-        /* Styles pour l'interface ajoutée */
-        .ui-panel { position: absolute; top: 15px; left: 15px; z-index: 10; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; font-family: sans-serif; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .reset-btn { position: absolute; bottom: 20px; right: 20px; padding: 10px 20px; cursor: pointer; background: #5d4037; color: white; border: none; border-radius: 5px; font-family: sans-serif; }
-        .footer { position: absolute; bottom: 10px; left: 15px; font-family: sans-serif; font-size: 12px; color: #5d4037; }
+        /* Interface principale */
+        .ui-panel { position: absolute; top: 15px; left: 15px; z-index: 10; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .reset-btn { position: absolute; bottom: 20px; right: 10px; padding: 10px 15px; cursor: pointer; background: #5d4037; color: white; border: none; border-radius: 5px; z-index: 10; }
+        .sidebar-btn { position: absolute; top: 15px; right: 15px; z-index: 15; padding: 10px 15px; font-size: 20px; cursor: pointer; background: #5d4037; color: white; border: none; border-radius: 5px; }
+
+        /* Volet latéral */
+        .sidebar { height: 100%; width: 0; position: fixed; right: 0; top: 0; background-color: #fcf5e5; overflow-y: auto; transition: 0.3s; box-shadow: -2px 0 5px rgba(0,0,0,0.2); z-index: 20; padding-top: 60px; }
+        .sidebar h2 { padding: 20px; }
+        .member-card { padding: 20px; border-bottom: 1px solid #ccc; }
+        .closebtn { position: absolute; top: 10px; left: 10px; font-size: 30px; cursor: pointer; text-decoration: none; color: #5d4037; }
+
+        @media (max-width: 600px) {
+            .ui-panel { top: 5px; left: 5px; padding: 8px; }
+            .ui-panel h1 { font-size: 16px; }
+            .sidebar { width: 100% !important; } /* Plein écran sur mobile */
+        }
     </style>
 </head>
 <body>
 
     <div class="ui-panel">
         <h1 style="margin: 0; font-size: 20px;">Arbre Généalogique</h1>
-        <p style="margin: 5px 0 0; font-size: 14px;">Molette pour zoomer • Cliquer-glisser pour naviguer</p>
+        <p style="margin: 5px 0 0; font-size: 14px;">Navigation interactive</p>
     </div>
+
+    <button onclick="toggleSidebar()" class="sidebar-btn">+</button>
+
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="toggleSidebar()">×</a>
+        <h2>Index des membres</h2>
+        <div class="member-card">
+            <h3>Jean Dupont</h3>
+            <a href="#" target="_blank">Voir Acte de Naissance</a>
+        </div>
+        </div>
 
     <object id="arbre-svg" data="arbre.svg" type="image/svg+xml"></object>
 
-    <button class="reset-btn" onclick="svgPanZoom('#arbre-svg').reset()">Revoir tout l'arbre</button>
-
-    <footer class="footer">Projet réalisé avec Adobe Illustrator & SVG | 2026</footer>
+    <button class="reset-btn" onclick="svgPanZoom('#arbre-svg').reset()">Réinitialiser</button>
 
     <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById("mySidebar");
+            sidebar.style.width = sidebar.style.width === "300px" ? "0" : "300px";
+        }
+
         window.onload = function() {
-            // Initialisation du zoom
             svgPanZoom('#arbre-svg', {
                 zoomEnabled: true,
                 controlIconsEnabled: true,
