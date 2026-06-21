@@ -11,10 +11,11 @@
         
         /* Interface principale */
         .ui-panel { position: absolute; top: 15px; left: 15px; z-index: 10; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .reset-btn { position: absolute; bottom: 20px; right: 10px; padding: 10px 15px; cursor: pointer; background: #cee7f2; color: white; border: none; border-radius: 5px; z-index: 10; }
+        .reset-btn { position: absolute; bottom: 20px; right: 20px; padding: 10px 15px; cursor: pointer; background: #5d4037; color: white; border: none; border-radius: 5px; z-index: 10; font-weight: bold; transition: background 0.2s; }
+        .reset-btn:hover { background: #422b24; }
         .sidebar-btn { position: absolute; top: 15px; right: 15px; z-index: 15; padding: 10px 15px; font-size: 20px; cursor: pointer; background: #cee7f2; color: white; border: none; border-radius: 5px; }
 
-        /* Volet latéral */
+        /* Volet latéral (prêt si tu l'utilises plus tard) */
         .sidebar { height: 100%; width: 0; position: fixed; right: 0; top: 0; background-color: #fcf5e5; overflow-y: auto; transition: 0.3s; box-shadow: -2px 0 5px rgba(0,0,0,0.2); z-index: 20; padding-top: 60px; }
         .sidebar h2 { padding: 20px; }
         .member-card { padding: 20px; border-bottom: 1px solid #ccc; }
@@ -36,22 +37,40 @@
 
     <object id="arbre-svg" data="arbre.svg" type="image/svg+xml"></object>
 
-    <button class="reset-btn" onclick="svgPanZoom('#arbre-svg').reset()">Réinitialiser</button>
+    <button class="reset-btn" onclick="resetZoom()">Réinitialiser</button>
 
     <script>
+        // Variable globale pour stocker l'instance du zoom
+        var panZoomInstance = null;
+
         function toggleSidebar() {
             var sidebar = document.getElementById("mySidebar");
-            sidebar.style.width = sidebar.style.width === "300px" ? "0" : "300px";
+            if (sidebar) {
+                sidebar.style.width = sidebar.style.width === "300px" ? "0" : "300px";
+            }
         }
 
-        window.onload = function() {
-            svgPanZoom('#arbre-svg', {
+        // Fonction pour réinitialiser le zoom proprement
+        function resetZoom() {
+            if (panZoomInstance) {
+                panZoomInstance.reset();
+                panZoomInstance.fit();
+                panZoomInstance.center();
+            }
+        }
+
+        // Attendre que l'élément <object> ait fini de charger le fichier SVG
+        document.getElementById('arbre-svg').addEventListener('load', function() {
+            panZoomInstance = svgPanZoom('#arbre-svg', {
                 zoomEnabled: true,
                 controlIconsEnabled: true,
                 fit: true,
-                center: true
+                center: true,
+                minZoom: 0.1,
+                maxZoom: 20,
+                zoomScaleFactor: 0.15
             });
-        };
+        });
     </script>
 </body>
 </html>
