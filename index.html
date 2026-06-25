@@ -34,6 +34,44 @@
         const svgObject = document.getElementById('arbre_copie-svg');
 
         svgObject.addEventListener('load', function() {
+            const svgDoc = svgObject.contentDocument;
+
+            // 1. Initialisation du zoom
+            svgPanZoom('#arbre_copie-svg', { 
+                zoomEnabled: true, 
+                controlIconsEnabled: true, 
+                fit: true, 
+                center: true,
+                mouseWheelZoomEnabled: true,
+                dblClickZoomEnabled: true,
+                preventMouseEventsDefault: false
+            });
+
+            // 2. Activation de la détection de survol sur les éléments du SVG
+            for (let id in membres) {
+                let element = svgDoc.getElementById(id);
+                if (element) {
+                    element.style.cursor = "pointer"; // Petit curseur main pour indiquer que c'est interactif
+                    
+                    element.addEventListener('mouseover', (e) => {
+                        document.getElementById('card-img').src = membres[id];
+                        document.getElementById('hover-card').style.display = 'block';
+                    });
+                    
+                    element.addEventListener('mousemove', (e) => {
+                        const card = document.getElementById('hover-card');
+                        // Décalage pour ne pas masquer l'élément survolé
+                        card.style.left = (e.pageX + 15) + 'px';
+                        card.style.top = (e.pageY + 15) + 'px';
+                    });
+                    
+                    element.addEventListener('mouseout', () => {
+                        document.getElementById('hover-card').style.display = 'none';
+                    });
+                } else {
+                    console.error("Erreur : L'ID '" + id + "' n'a pas été trouvé dans le fichier SVG.");
+    
+        svgObject.addEventListener('load', function() {
             // Initialisation avec activation du tactile et du trackpad
             svgPanZoom('#arbre_copie-svg', { 
                 zoomEnabled: true, 
