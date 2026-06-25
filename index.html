@@ -39,7 +39,7 @@
     <script>
         // Ajoutez ici vos correspondances ID SVG -> Chemin Image
         const membres = {
-            "louis_granier": "archives/acte_mariage_louis_granier.jpg"
+            "louis_granier": "image/acte_mariage_louis_granier.jpg"
         };
 
         const svgObject = document.getElementById('arbre-svg');
@@ -47,7 +47,7 @@
         svgObject.addEventListener('load', function() {
             const svgDoc = svgObject.contentDocument;
 
-            svgPanZoom('#arbre-svg', { 
+            svgPanZoom('#arbre_copie-svg', { 
                 zoomEnabled: true, 
                 controlIconsEnabled: true, 
                 fit: true, 
