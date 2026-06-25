@@ -7,70 +7,45 @@
     <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
     <style>
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #f4ecd8; font-family: sans-serif; }
-        #arbre-svg { width: 100%; height: 100vh; display: block; }
+        /* L'objet doit prendre toute la place disponible */
+        #arbre_copie-svg { width: 100%; height: 100%; display: block; }
         
-        /* Panneau d'information */
-        .ui-panel { position: absolute; top: 15px; left: 15px; z-index: 10; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .ui-panel { position: absolute; top: 15px; left: 15px; z-index: 10; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); pointer-events: none; }
         .reset-btn { position: absolute; bottom: 20px; right: 20px; padding: 10px 20px; cursor: pointer; background: #5d4037; color: white; border: none; border-radius: 5px; z-index: 10; }
 
-        /* Bulle d'information (Hover Card) */
         #hover-card { position: absolute; display: none; background: #fff; border: 2px solid #5d4037; padding: 5px; z-index: 100; pointer-events: none; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         #card-img { width: 200px; height: auto; border-radius: 4px; }
-
-        @media (max-width: 600px) {
-            .ui-panel { top: 5px; left: 5px; padding: 8px; }
-            .ui-panel h1 { font-size: 16px; }
-        }
     </style>
 </head>
 <body>
 
     <div class="ui-panel">
         <h1 style="margin: 0; font-size: 20px;">Arbre Généalogique</h1>
-        <p style="margin: 5px 0 0; font-size: 14px;">Survolez les cases pour voir les actes</p>
     </div>
 
     <div id="hover-card"><img id="card-img" src="" alt="Acte"></div>
 
     <object id="arbre_copie-svg" data="arbre_copie.svg" type="image/svg+xml"></object>
 
-    <button class="reset-btn" onclick="svgPanZoom('#arbre_copie-svg').reset()">Réinitialiser</button>
+    <button class="reset-btn" onclick="svgPanZoom('#arbre_copie-svg').reset()">Centrer l'arbre</button>
 
     <script>
-        // Ajoutez ici vos correspondances ID SVG -> Chemin Image
-        const membres = {
-            "louis_granier": "image/acte_mariage_louis_granier.jpg"
-        };
-
+        const membres = { "louis_granier": "image/acte_mariage_louis_granier.jpg" };
         const svgObject = document.getElementById('arbre_copie-svg');
 
         svgObject.addEventListener('load', function() {
-            const svgDoc = svgObject.contentDocument;
-
+            // Initialisation avec activation du tactile et du trackpad
             svgPanZoom('#arbre_copie-svg', { 
                 zoomEnabled: true, 
                 controlIconsEnabled: true, 
                 fit: true, 
-                center: true 
+                center: true,
+                mouseWheelZoomEnabled: true, // Pour le zoom à la souris/pad
+                dblClickZoomEnabled: true,   // Zoom au double clic
+                preventMouseEventsDefault: false // Permet le scroll natif si besoin
             });
 
-            for (let id in membres) {
-                let element = svgDoc.getElementById(id);
-                if (element) {
-                    element.addEventListener('mouseover', (e) => {
-                        document.getElementById('card-img').src = membres[id];
-                        document.getElementById('hover-card').style.display = 'block';
-                    });
-                    element.addEventListener('mousemove', (e) => {
-                        const card = document.getElementById('hover-card');
-                        card.style.left = (e.pageX + 15) + 'px';
-                        card.style.top = (e.pageY + 15) + 'px';
-                    });
-                    element.addEventListener('mouseout', () => {
-                        document.getElementById('hover-card').style.display = 'none';
-                    });
-                }
-            }
+            // Note : L'interaction tactile est activée par défaut par la bibliothèque
         });
     </script>
 </body>
